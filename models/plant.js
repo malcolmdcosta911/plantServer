@@ -16,6 +16,17 @@ const plantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  images: {
+    type: [
+      {
+        filename: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    required: true,
+  },
   location: {
     type: pointSchema,
     required: true, //just allow both  user and admin to add for now on api
@@ -38,7 +49,7 @@ function validatePlant(category) {
   const schema = Joi.object({
     name: Joi.string().min(2).max(255).required(),
     description: Joi.string().required(),
-    longitude: Joi.number().min(-180).max(180).required(),
+    longitude: Joi.number().min(-180).max(180).required(), //acepts string as long as numbers used
     latitude: Joi.number().min(-90).max(90).required(),
     categoryIds: Joi.array()
       .items(
@@ -57,3 +68,5 @@ module.exports = {
   Plant,
   validatePlant,
 };
+
+//http://localhost:3500/images/images-1711624996077.jpg
