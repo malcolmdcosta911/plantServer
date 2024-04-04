@@ -35,4 +35,14 @@ const userProfile = async (req, res, next) => {
   return res.status(200).json({ data: { user } });
 };
 
-module.exports = { register, userProfile };
+const getAllUsers = async (req, res) => {
+  //all users other than admin
+  const users = await User.find({ roles: { $ne: "admin" } })
+    .sort({ createdAt: -1 })
+    .select("name email phone createdAt")
+    .select("-__v");
+
+  return res.status(200).json({ data: { users } });
+};
+
+module.exports = { register, userProfile, getAllUsers };

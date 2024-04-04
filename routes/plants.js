@@ -2,16 +2,19 @@ const express = require("express");
 const router = express.Router();
 const plantController = require("../controllers/plantController");
 const auth = require("../middleware/auth");
+const validateObjectId = require("../middleware/validateObjectId");
+const admin = require("../middleware/admin");
 
 router.route("/").get([auth], plantController.getAllPlants);
+router
+  .route("/:id")
+  .get([auth, validateObjectId], plantController.getPlantByID);
 router.route("/").post([auth], plantController.addPlant);
+router
+  .route("/:id")
+  .put([auth, admin, validateObjectId], plantController.updatePlant); //only admin
+router
+  .route("/:id")
+  .delete([auth, admin, validateObjectId], plantController.deletePlant); //only admin
 
 module.exports = router;
-
-// {
-//     "name":"Tomato ",
-//     "description":"used in salad",
-//     "longitude":"180",
-//     "latitude":"90",
-//     "categoryIds":["6603142f3c0f77d3574212e3", "6603143c3c0f77d3574212e6"]
-// }

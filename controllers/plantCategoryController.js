@@ -6,12 +6,10 @@ const {
 const addCategory = async (req, res) => {
   // console.log("addCategory", req?.body);
   
-
   const { error } = validatePlantCategory(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   let category = await PlantCategory.find({ name: req.body.name });
-  console.log(category);
   if (category?.length)
     return res.status(400).json({ message: "category already present" });
 

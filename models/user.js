@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin"], //enum only for predefined set of values
     default: ["user"],
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 userSchema.static({
