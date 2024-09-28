@@ -60,6 +60,10 @@ const addPlant = async (req, res, next) => {
       },
       images: images,
       categories: categories.map((cat) => ({ _id: cat._id, name: cat.name })),
+      createdBy: {
+        userId: req.user._id, // ID of the user creating the plant
+        // roles: req.user.roles, // The role of the user
+      },
     });
 
     await plant.save();

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 const { pointSchema } = require("./point");
 const { plantCategorySchema } = require("./plantcategory");
+const { User } = require("./user");
 
 const plantSchema = new mongoose.Schema({
   //need to add images
@@ -42,6 +43,24 @@ const plantSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  createdBy: {
+    type: {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // This refers to the User model
+        required: true,
+      },
+    },
+    required: true,
+  },
+});
+
+plantSchema.post("save", async function (doc) {
+  let user = await User.findOne({ _id: doc.createdBy.userId });
+  if (!user) return;
+  if (user.roles.includes("admin")) return; //only notify admin  if user adds plant
+  plantAddEventEmitter.emit("plantAdded", [{ plantId: doc._id }]);
 });
 
 const Plant = mongoose.model("Plant", plantSchema);
